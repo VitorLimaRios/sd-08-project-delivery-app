@@ -27,7 +27,7 @@ cd sd-08-project-delivery-app
 ```
 3. Crie um arquivo .env dentro da pasta do back-end seguindo o exemplo do arquivo .env.exemple:
 ```
-cd back-end
+cd back-end && touch .env
 ```
 4. Instale as dependências na pasta raiz do projeto:
 ```
