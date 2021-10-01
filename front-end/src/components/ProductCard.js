@@ -17,7 +17,13 @@ export default function ProductCard(props) {
 
   const updateStorage = (value) => {
     const storage = localStorage.getItem('carrinho');
-    const newStorage = { ...JSON.parse(storage), [id]: value };
+    let newStorage;
+    if (value === 0) {
+      newStorage = { ...JSON.parse(storage) };
+      delete newStorage[id];
+    } else {
+      newStorage = { ...JSON.parse(storage), [id]: value };
+    }
     localStorage.setItem('carrinho', JSON.stringify(newStorage));
   };
 
@@ -108,7 +114,7 @@ ProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number,
     name: PropTypes.string,
-    price: PropTypes.number,
+    price: PropTypes.string,
     url_image: PropTypes.string,
   }).isRequired,
 };

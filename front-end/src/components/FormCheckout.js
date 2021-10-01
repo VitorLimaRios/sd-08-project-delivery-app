@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import PropTypes from 'prop-types';
 import { Col, Form, Row, Button } from 'react-bootstrap';
 import Input from './Input';
+import { GlobalContext } from '../context/GlobalProvider';
 
 const SELECT_ID = 'customer_checkout__select-seller';
 const ADDRESS_ID = 'customer_checkout__input-address';
@@ -15,6 +16,10 @@ function FormCheckout({ values }) {
   const [seller, setSeller] = useState(sellers[0].id);
   const [address, setAddress] = useState('');
   const [number, setNumber] = useState('');
+
+  const {
+    functions: { setTotalPrice },
+  } = useContext(GlobalContext);
 
   function handleSelect(event) {
     setSeller(event.target.value);
@@ -33,6 +38,7 @@ function FormCheckout({ values }) {
     };
 
     localStorage.setItem('carrinho', JSON.stringify({}));
+    setTotalPrice(0);
     const user = localStorage.getItem('user');
     const { token } = JSON.parse(user);
 
