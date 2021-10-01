@@ -38,21 +38,32 @@ cd .. && npm install
 npm run dev:prestart
 ```
 
-## Usando o App de Delivery
+## Usando o App de Delivery em ambiente de desenvolvimento
 
 - Estando na pasta raiz do projeto utilize o seguinte script:
 ```
-npm start
+npm run dev
 ```
-Este script foi criado pela [Trybe](https://www.betrybe.com/) e ele limpa as portas 3000 e 3001 e simula a inicialização no avaliador. Prepara o campo rodando o Sequelize para restaurar o banco de dados de testes (final -test) e sobe a aplicação com pm2 em modo fork (Uma instância pra cada aplicação). Nesse modo as alterações não são assistidas;
+Este script foi criado pela [Trybe](https://www.betrybe.com/) e ele limpa as portas `3000` e `3001` e sobe a aplicação com `pm2` em modo `fork` (Uma instância pra cada aplicação), nesse modo, as atualizações são assistidas (modo `watch`).
+1. Caso deseje acessar a aplicação como usuário, você pode criar uma conta ou acessar usando os seguintes dados:
+- email: `zebirita@email.com`
+- senha: `$#zebirita#$`
+
+2. Caso deseje acessar a aplicação como vendedora, você pode criar uma conta através do admin ou acessar usando os seguintes dados:
+- email: `fulana@deliveryapp.com`
+- senha: `fulana@123`
+
+3. Caso deseje acessar a aplicação como admin, você pode acessar usando os seguintes dados:
+- email: `adm@deliveryapp.com`
+- senha: `--adm2@21!!--`
 
 ## Alguns Scripts relevantes criados pela [Trybe](https://www.betrybe.com/):
 
+- `start`: Limpa as portas `3000` e `3001` e simula a inicialização no avaliador. Prepara o campo rodando o `Sequelize` para restaurar o **banco de dados de testes** (final `-test`) e sobe a aplicação com `pm2` em modo `fork` (Uma instância pra cada aplicação). Nesse modo as alterações não são assistidas;
+  - *uso (na raiz do projeto): `npm start`*
+
 - `stop`: Para e deleta as aplicações rodando no `pm2`;
   - *uso (na raiz do projeto): `npm stop`*
-
-- `dev`: Limpa as portas `3000` e `3001` e sobe a aplicação com `pm2` em modo `fork` (Uma instância pra cada aplicação), nesse modo, as atualizações são assistidas (modo `watch`);
-  - *uso (na raiz do projeto): `npm run dev`*
 
 - `dev:prestart`: A partir da raiz, esse comando faz o processo de instalação de dependências (`npm i`) nos dois projetos (`./front-end` e `./back-end`) e roda o `Sequelize` no `./back-end` (lembrar de configurar o `.env` no mesmo);
   - *uso (na raiz do projeto): `npm run dev:prestart`*
