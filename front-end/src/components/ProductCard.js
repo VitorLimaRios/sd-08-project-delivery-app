@@ -45,17 +45,18 @@ export default function ProductCard(props) {
   };
 
   const cardStyle = {
-    width: '5rem',
-    height: '5rem',
+    width: '18rem',
   };
 
   const imgStyle = {
-    width: '5px',
-    height: '5px',
+    width: '100%',
   };
 
   return (
-    <Card style={ cardStyle } className="m-2">
+    <Card
+      style={ cardStyle }
+      className="m-2"
+    >
       <Card.Img
         style={ imgStyle }
         variant="top"
@@ -66,6 +67,7 @@ export default function ProductCard(props) {
         <Card.Title
           data-testid={ `customer_products__element-card-price-${id}` }
         >
+          R$
           { price.toString().replace('.', ',') }
         </Card.Title>
       </Card.ImgOverlay>

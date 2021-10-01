@@ -5,16 +5,22 @@ import { ListGroup, Row, Card, Col } from 'react-bootstrap';
 export default function OrderCard(props) {
   const { requests: { id, totalPrice, saleDate, status }, user, children } = props;
 
-  // const price = new Intl.NumberFormat('BRL', {
-  //   style: 'currency', currency: 'BRL',
-  // }).format(totalPrice);
+  const deliveryStatus = new Map([
+    ['Pendente', 'bg-warning text-dark rounded'],
+    ['Preparando', 'bg-info text-white rounded'],
+    ['Em transito', 'bg-warning text-dark rounded'],
+    ['Entregue', 'bg-success text-white rounded'],
+  ]);
 
-  const price = parseFloat(totalPrice).toFixed(2).toString().replace('.', ',');
-  const date = new Date(saleDate).toLocaleDateString('pt-BR');
+  const price = new Intl.NumberFormat('BRL', {
+    style: 'currency', currency: 'BRL',
+  }).format(totalPrice);
+  const date = new Date(saleDate).toLocaleDateString();
   return (
-    <Card className="m-2">
+    <Card style={ { width: '21rem' } } className="m-2">
       <Row>
         <Col
+          style={ { width: '21rem' } }
           data-testid={ `${user}_orders__element-order-id-${id}` }
           className="text-center p-4"
         >
@@ -22,7 +28,7 @@ export default function OrderCard(props) {
         </Col>
         <Col
           data-testid={ `${user}_orders__element-delivery-status-${id}` }
-          className="text-center p-4"
+          className={ `text-center m-1 p-4 ${deliveryStatus.get(status)}` }
         >
           { status }
         </Col>

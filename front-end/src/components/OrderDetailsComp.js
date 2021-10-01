@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import { Button } from 'react-bootstrap';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import { Button, Row, Col } from 'react-bootstrap';
 import '../styles/orderDetails.css';
 import {
   orderNumber,
@@ -34,6 +31,13 @@ export default function OrderDetailsComp() {
     seller: 'seller_order_details__',
   };
 
+  const deliveryStatus = new Map([
+    ['Pendente', 'bg-warning text-dark rounded'],
+    ['Preparando', 'bg-info text-white rounded'],
+    ['Em transito', 'bg-warning text-dark rounded'],
+    ['Entregue', 'bg-success text-white rounded'],
+  ]);
+
   useEffect(() => {
     async function requestOrderById() {
       try {
@@ -55,7 +59,6 @@ export default function OrderDetailsComp() {
     totalValues = parseFloat(value) + parseFloat(totalValues);
     return null;
   };
-
   const conditionUser = () => {
     if (roleUser === 'seller') return false;
     return (
@@ -65,7 +68,6 @@ export default function OrderDetailsComp() {
       </Col>
     );
   };
-
   const requestStatus = async (value) => {
     try {
       await axios.put(`http://localhost:3001/${roleUser}/orders/${id}`, {
@@ -76,83 +78,89 @@ export default function OrderDetailsComp() {
       console.log(e);
     }
   };
-
   const conditionUserButton = () => {
     if (roleUser === 'seller') {
       return (
         <>
-          <Button
-            type="submit"
-            variant="success"
-            size="sm"
-            data-testid={ `${prefix[roleUser]}button-preparing-check` }
-            onClick={ () => requestStatus('Preparando') }
-            disabled={ disableButtonPrepar(status) }
-          >
-            PREPARAR PEDIDO
-          </Button>
-          <Button
-            type="submit"
-            variant="success"
-            size="sm"
-            data-testid={ `${prefix[roleUser]}button-dispatch-check` }
-            onClick={ () => requestStatus('Em Trânsito') }
-            disabled={ disableButtonDelivery(status) }
-          >
-            SAIU PARA ENTREGA
-          </Button>
+          <Col className="d-grid gap-2" md={ { span: 6 } }>
+            <Button
+              type="submit"
+              variant="success"
+              data-testid={ `${prefix[roleUser]}button-preparing-check` }
+              onClick={ () => requestStatus('Preparando') }
+              disabled={ disableButtonPrepar(status) }
+            >
+              PREPARAR PEDIDO
+            </Button>
+          </Col>
+          <Col className="d-grid gap-2" md={ { span: 6 } }>
+            <Button
+              type="submit"
+              variant="success"
+              data-testid={ `${prefix[roleUser]}button-dispatch-check` }
+              onClick={ () => requestStatus('Em Trânsito') }
+              disabled={ disableButtonDelivery(status) }
+            >
+              SAIU PARA ENTREGA
+            </Button>
+          </Col>
         </>
       );
     }
     return (
-      <Button
-        type="submit"
-        variant="success"
-        size="sm"
-        data-testid={ `${prefix[roleUser]}button-delivery-check` }
-        onClick={ () => requestStatus('Entregue') }
-        disabled={ disableButton(status) }
-      >
-        MARCAR COMO ENTREGUE
-      </Button>
+      <Col>
+        <Button
+          type="submit"
+          variant="success"
+          size="sm"
+          data-testid={ `${prefix[roleUser]}button-delivery-check` }
+          onClick={ () => requestStatus('Entregue') }
+          disabled={ disableButton(status) }
+        >
+          MARCAR COMO ENTREGUE
+        </Button>
+      </Col>
     );
   };
-
   const renderDetails = () => (
-    <Row>
-      <Col
-        className="font-weight-bold rounded bg-success text-black"
-        data-testid={ `${prefix[roleUser]}element-order-details-label-order-id` }
-      >
-        PEDIDO:
-        { ' ' }
-        {id.padStart(orderNumber(id), '0')}
-        { ' ' }
-      </Col>
-      { conditionUser() }
-      <Col
-        className="font-weight-bold rounded bg-secondary text-black"
-        data-testid={ `${prefix[roleUser]}element-order-details-label-order-date` }
-      >
-        {saleDate}
-
-      </Col>
-      <Col
-        data-testid={ `${prefix[roleUser]}element-order-details-label-delivery-status` }
-      >
-        {status}
-      </Col>
-      <Col
-        className="col-2"
-      >
+    <>
+      <Table size="lg" responsive>
+        <thead className="text-center">
+          <tr>
+            <th
+              data-testid={ `${prefix[roleUser]}element-order-details-label-order-id` }
+            >
+              PEDIDO:
+              { ' ' }
+              {id.padStart(orderNumber(id), '0')}
+            </th>
+            <th>
+              { conditionUser() }
+            </th>
+            <th
+              data-testid={ `${prefix[roleUser]}element-order-details-label-order-date` }
+            >
+              {saleDate}
+            </th>
+            <th
+              className={ deliveryStatus.get(status) }
+              data-testid={
+                `${prefix[roleUser]}element-order-details-label-delivery-status`
+              }
+            >
+              {status}
+            </th>
+          </tr>
+        </thead>
+      </Table>
+      <div className="d-flex pb-4">
         { conditionUserButton() }
-      </Col>
-    </Row>
+      </div>
+    </>
   );
-
   const renderTable = () => (
-    <Table striped bordered hover size="lg">
-      <thead>
+    <Table striped bordered hover size="lg" responsive>
+      <thead className="text-center">
         <tr>
           <th>Item</th>
           <th>Descrição</th>
@@ -161,7 +169,7 @@ export default function OrderDetailsComp() {
           <th>Sub-Total</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className="text-center">
         { order.map((elem, index) => (
           <tr key={ index }>
             <td
@@ -208,35 +216,30 @@ export default function OrderDetailsComp() {
           </tr>
         ))}
       </tbody>
-      <tbody>
+      <tfoot className="text-center">
         <tr>
-          Total R$:
           <td
             className="justify"
             data-testid={ `${prefix[roleUser]}element-order-total-price` }
           >
+            Total: R$
             { totalValues.toFixed(2).replace('.', ',') }
           </td>
         </tr>
-      </tbody>
+      </tfoot>
     </Table>
   );
-
   const renderError = () => <span>{error}</span>;
-
   const render = () => (
-    <div>
-      Detalhe do Pedido
-      <Container>
-        {renderDetails()}
-        <Row>{renderTable()}</Row>
-      </Container>
-    </div>
+    <>
+      <h4>Detalhe do Pedido</h4>
+      <Row>{renderDetails()}</Row>
+      <Row>{renderTable()}</Row>
+    </>
   );
-
   return (
     <div>
-      { loading ? renderError() : <div>{ render() }</div> }
+      { loading ? renderError() : render() }
     </div>
   );
 }
